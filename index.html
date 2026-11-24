@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tropical Cash • Play Store</title>
+<style>
+:root{--green:#075b3b;--green2:#0b7b50;--gold:#e9bd55;--cream:#fffaf0;--ink:#18231e;--muted:#69766f;--line:#e6e9e4;--red:#b93d37}
+*{box-sizing:border-box}body{margin:0;background:#f2f5f1;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,#06472f,#0b7650);color:white;padding:20px max(18px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:var(--gold);color:#17442f;display:grid;place-items:center;font-weight:900;font-size:21px}.brand h1{font-size:21px;margin:0}.brand small{opacity:.8}
+header button{background:#ffffff1b;color:white;border:1px solid #ffffff55;border-radius:10px;padding:10px 13px;cursor:pointer}
+main{max-width:1100px;margin:22px auto;padding:0 16px}.notice{background:#fff7df;border:1px solid #f0d78c;padding:11px 14px;border-radius:12px;color:#654d16;font-size:13px;margin-bottom:18px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid var(--line);background:white;padding:11px 14px;border-radius:10px;cursor:pointer;font-weight:700;color:#415047}.tab.active{background:var(--green);color:white;border-color:var(--green)}
+.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 3px 12px #10251a08}.card h2,.card h3{margin:0 0 10px}.card h2{font-size:18px}.muted{color:var(--muted);font-size:13px}.balance{font-size:30px;font-weight:800;color:var(--green);margin:9px 0}.account-id{font-size:12px;color:var(--muted);letter-spacing:.5px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #d7ded8;border-radius:9px;font:inherit;background:white}button.primary,button.secondary,button.danger{border:0;border-radius:9px;padding:11px 14px;font-weight:700;cursor:pointer;margin-top:10px}
+.primary{background:var(--green);color:white}.secondary{background:#e9f2ed;color:var(--green)}.danger{background:#fae9e7;color:var(--red)}button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1}.full{width:100%}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.table-wrap{overflow:auto}.pill{display:inline-block;background:#eaf3ee;color:var(--green);padding:4px 8px;border-radius:99px;font-size:11px;font-weight:700}.pill.out{background:#fae9e7;color:var(--red)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.hidden{display:none!important}.center{text-align:center}.big-icon{font-size:34px}.customer-card{cursor:pointer}.customer-card:hover{border-color:#9abdaa}.product-card{display:flex;flex-direction:column;gap:8px}.product-emoji{font-size:38px;background:#f3f7f3;border-radius:12px;padding:12px;text-align:center}.product-price{font-size:24px;font-weight:800;color:var(--green)}.stock-note{font-size:12px;color:var(--muted)}
+footer{text-align:center;color:#849087;font-size:12px;padding:30px 12px}
+.modal{position:fixed;inset:0;background:#0a2118a8;display:none;align-items:center;justify-content:center;padding:16px;z-index:5}.modal.show{display:flex}.modalbox{background:white;border-radius:16px;padding:22px;width:min(420px,100%)}.modalbox h2{margin-top:0}
+@media(max-width:600px){header{padding:16px}.brand h1{font-size:18px}.row{grid-template-columns:1fr}th,td{padding:9px 6px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">TC</div><div><h1>Tropical Cash</h1><small>Play Store • Family Edition</small></div></div>
+ <button id="managerTop">Manager sign in</button>
+</header>
+<main>
+ <div class="notice"><b>PLAY MONEY ONLY:</b> This is a pretend store game for family play. Balances are imaginary credits, not real money, checks, deposits, or payments.</div>
+ <nav>
+  <button class="tab active" data-tab="home">Play Store Home</button>
+  <button class="tab" data-tab="shop">Digital Store</button>
+  <button class="tab" data-tab="inventory">Manage Items</button>
+  <button class="tab" data-tab="customers">Customer Accounts</button>
+  <button class="tab" data-tab="checks">Checks Desk</button>
+  <button class="tab" data-tab="history">Receipts & History</button>
+  <button class="tab" data-tab="manager">Manager</button>
+ </nav>
+ <section id="home" class="panel active">
+  <div class="grid">
+   <div class="card"><div class="muted">MANAGER ACCOUNT</div><div class="balance" id="managerBalance">$0.00</div><div class="account-id">TC-MANAGER • Manager balance</div></div>
+   <div class="card"><div class="muted">CHECKS ACCOUNT</div><div class="balance" id="checksBalance">$0.00</div><div class="account-id">TC-CHECKS • Pretend check ledger</div></div>
+   <div class="card"><div class="muted">CUSTOMER ACCOUNTS</div><div class="balance" id="customerTotal">$0.00</div><div class="account-id" id="customerCount">0 customers</div></div>
+  </div>
+  <div class="grid" style="margin-top:14px">
+   <div class="card"><div class="big-icon">🛍️</div><h2>Welcome to Tropical Cash</h2><p class="muted">Choose a customer account to shop, make a pretend purchase, or visit the manager desk to update play credits.</p><button class="primary" onclick="showTab('shop')">Browse digital store</button></div>
+   <div class="card"><div class="big-icon">🧾</div><h2>Cashier counter</h2><p class="muted">Create a receipt for a pretend sale using a customer's play balance.</p><button class="primary" onclick="showTab('customers')">Go to customers</button></div>
+  </div>
+ </section>
+
+ <section id="shop" class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+   <div><h2 style="margin:0">Tropical Cash Digital Store</h2><div class="muted">Browse items and make pretend purchases with customer play credits.</div></div>
+   <span class="pill">Play shop</span>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+   <div class="row">
+    <div><label>Customer paying</label><select id="shopCustomer"></select></div>
+    <div><label>Search items</label><input id="shopSearch" placeholder="Search the store..." oninput="renderShop()"></div>
+   </div>
+  </div>
+  <div id="shopGrid" class="grid"></div>
+ </section>
+ <section id="inventory" class="panel">
+  <div id="inventoryLocked" class="card center"><div class="big-icon">🔐</div><h2>Manage Store Items</h2><p class="muted">Manager sign-in is required to add, change, or remove products and prices.</p><button class="primary" onclick="managerLogin()">Manager sign in</button></div>
+  <div id="inventoryTools" class="hidden">
+   <div class="card" style="margin-bottom:14px">
+    <h2 id="itemFormTitle">Add an item for sale</h2>
+    <div class="row">
+     <div><label>Item name</label><input id="itemName" maxlength="50" placeholder="Example: Squishy toy"></div>
+     <div><label>Price ($ play credits)</label><input id="itemPrice" type="number" min="0.01" step="0.01" placeholder="5.00"></div>
+     <div><label>Category</label><select id="itemCategory"><option>Toys</option><option>Mystery Boxes</option><option>Books</option><option>Cars</option><option>Rock Collection</option><option>Sports</option><option>Other</option></select></div>
+     <div><label>Quantity in stock</label><input id="itemStock" type="number" min="0" step="1" value="10"></div>
+    </div>
+    <div class="actions"><button class="primary" id="saveItemBtn" onclick="saveItem()">Add item</button><button class="secondary hidden" id="cancelEditBtn" onclick="cancelItemEdit()">Cancel edit</button></div>
+   </div>
+   <div class="card"><h2>Your items for sale</h2><div class="muted">Change prices, stock, or remove items whenever you want.</div><div class="table-wrap"><table><thead><tr><th>Item</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody id="inventoryRows"></tbody></table></div></div>
+  </div>
+ </section>
+ <section id="customers" class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div><h2 style="margin:0">Customer Accounts</h2><div class="muted">Select a customer to view their wallet and make a pretend purchase.</div></div><button class="primary" onclick="openCustomerModal()">＋ New customer</button></div>
+  <div id="customerGrid" class="grid"></div>
+  <div id="customerDetail" class="card hidden" style="margin-top:16px"></div>
+ </section>
+ <section id="checks" class="panel">
+  <div class="grid">
+   <div class="card"><h2>Checks Desk</h2><div class="muted">A separate pretend ledger for the game. No real checks are accepted or verified.</div><div class="balance" id="checksDeskBalance">$0.00</div>
+    <label>Customer</label><select id="checkCustomer"></select>
+    <label>Pretend check amount</label><input id="checkAmount" type="number" min="0.01" step="0.01" placeholder="25.00">
+    <label>Check number (make-believe)</label><input id="checkNumber" maxlength="16" placeholder="CHK-001">
+    <button class="primary full" onclick="recordCheck()">Record pretend check</button>
+   </div>
+   <div class="card"><h2>How the checks account works</h2><p class="muted">Recording a pretend check adds an entry to the Checks Account ledger. It does not add spendable customer credits until the manager chooses to credit the customer.</p><p class="muted">Use only made-up check numbers and play amounts.</p></div>
+  </div>
+ </section>
+ <section id="history" class="panel">
+  <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><h2>Receipts & Transaction History</h2><div class="muted">Every pretend account change appears here.</div></div><button class="secondary" onclick="exportHistory()">Export play history</button></div>
+   <div class="table-wrap"><table><thead><tr><th>Date / time</th><th>Type</th><th>Account</th><th>Details</th><th>Amount</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+  </div>
+ </section>
+ <section id="manager" class="panel">
+  <div id="managerLocked" class="card center"><div class="big-icon">🔐</div><h2>Manager Desk</h2><p class="muted">Sign in to manage play credits and accounts.</p><button class="primary" onclick="managerLogin()">Manager sign in</button></div>
+  <div id="managerTools" class="hidden">
+   <div class="grid">
+    <div class="card"><h2>Adjust customer balance</h2><label>Customer</label><select id="managerCustomer"></select><label>Action</label><select id="adjustAction"><option value="add">Add play credits</option><option value="remove">Remove play credits</option></select><label>Amount</label><input id="adjustAmount" type="number" min="0.01" step="0.01" placeholder="10.00"><label>Reason</label><input id="adjustReason" maxlength="80" placeholder="Birthday bonus / correction"><button class="primary full" onclick="adjustCustomer()">Save adjustment</button></div>
+    <div class="card"><h2>Manager Account / Checks Account</h2><label>Account</label><select id="fundAccount"><option value="manager">Manager Account</option><option value="checks">Checks Account</option></select><label>Action</label><select id="fundAction"><option value="add">Add play credits</option><option value="remove">Remove play credits</option></select><label>Amount</label><input id="fundAmount" type="number" min="0.01" step="0.01" placeholder="20.00"><label>Reason</label><input id="fundReason" maxlength="80" placeholder="Starting balance"><button class="primary full" onclick="adjustFund()">Save account change</button></div>
+    <div class="card"><h2>Manager controls</h2><p class="muted">Manager is signed in on this browser.</p><button class="secondary full" onclick="managerLogout()">Sign out manager</button><button class="danger full" onclick="resetGame()">Reset all game data</button><p class="muted">Default manager PIN: <b>1234</b>. Change it below before playing.</p><label>New manager PIN</label><input id="newPin" inputmode="numeric" maxlength="8" placeholder="4–8 digits"><button class="secondary full" onclick="changePin()">Change PIN</button></div>
+   </div>
+  </div>
+ </section>
+</main>
+<footer>Tropical Cash Play Store • Family game prototype • Play credits only</footer>
+
+<div class="modal" id="customerModal"><div class="modalbox"><h2>Create customer account</h2><label>Customer name</label><input id="newName" maxlength="35" placeholder="e.g. Angelo"><label>Starting play credits</label><input id="newBalance" type="number" min="0" step="0.01" value="0"><div class="actions"><button class="secondary" onclick="closeCustomerModal()">Cancel</button><button class="primary" onclick="createCustomer()">Create account</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>'$'+Number(n||0).toFixed(2);
+const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const starterItems=[
+ {id:'IT-001',name:'Squishies',category:'Toys',price:4.00,stock:20,emoji:'🧸'},
+ {id:'IT-002',name:'Mystery Box',category:'Mystery Boxes',price:8.00,stock:12,emoji:'🎁'},
+ {id:'IT-003',name:'Books',category:'Books',price:3.50,stock:15,emoji:'📚'},
+ {id:'IT-004',name:'Toy Cars',category:'Cars',price:2.50,stock:25,emoji:'🚗'},
+ {id:'IT-005',name:'Rock Collection',category:'Rock Collection',price:5.00,stock:10,emoji:'🪨'},
+ {id:'IT-006',name:'FIFA Balls',category:'Sports',price:12.00,stock:8,emoji:'⚽'}
+];
+const defaults={manager:100,checks:0,pin:'1234',customers:[{id:'TC-1001',name:'Customer One',balance:50},{id:'TC-1002',name:'Customer Two',balance:25}],items:starterItems,history:[]};
+let data;
+try{data=JSON.parse(localStorage.getItem('tcPlayStore'))||JSON.parse(JSON.stringify(defaults));if(data.manager===undefined){data.manager=Number(data.store||0);delete data.store}if(!Array.isArray(data.items))data.items=JSON.parse(JSON.stringify(starterItems))}catch(e){data=JSON.parse(JSON.stringify(defaults))}
+let managerOn=false,selectedCustomer=null;
+function save(){localStorage.setItem('tcPlayStore',JSON.stringify(data));render()}
+function log(type,account,details,amount){data.history.unshift({date:new Date().toLocaleString(),type,account,details,amount:Number(amount||0)});data.history=data.history.slice(0,300)}
+function showTab(id){document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));if(id==='manager'&&!managerOn){}}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+$('managerTop').onclick=()=>{showTab('manager');managerLogin()};
+
+let editingItemId=null;
+function itemEmoji(category){
+ return ({'Toys':'🧸','Mystery Boxes':'🎁','Books':'📚','Cars':'🚗','Rock Collection':'🪨','Sports':'⚽','Other':'🛍️'})[category]||'🛍️';
+}
+function renderShop(){
+ const q=($('shopSearch')?.value||'').toLowerCase();
+ const list=(data.items||[]).filter(i=>(i.name+' '+i.category).toLowerCase().includes(q));
+ $('shopGrid').innerHTML=list.map(i=>`<div class="card product-card">
+  <div class="product-emoji">${i.emoji||itemEmoji(i.category)}</div>
+  <div><span class="pill">${safe(i.category)}</span><h2 style="margin:8px 0 4px">${safe(i.name)}</h2>
+  <div class="product-price">${money(i.price)}</div><div class="stock-note">${Number(i.stock)>0?Number(i.stock)+' available':'Out of stock'}</div></div>
+  <button class="primary full" ${Number(i.stock)<=0?'disabled':''} onclick="buyItem('${i.id}')">Buy item</button>
+ </div>`).join('')||'<div class="card">No items match your search. Ask the manager to add products.</div>';
+}
+function renderInventory(){
+ if(!$('inventoryRows'))return;
+ $('inventoryRows').innerHTML=(data.items||[]).map(i=>`<tr><td><b>${i.emoji||itemEmoji(i.category)} ${safe(i.name)}</b></td><td>${safe(i.category)}</td><td>${money(i.price)}</td><td>${Number(i.stock)}</td><td><button class="secondary" onclick="editItem('${i.id}')">Edit</button> <button class="danger" onclick="deleteItem('${i.id}')">Remove</button></td></tr>`).join('')||'<tr><td colspan="5">No products yet.</td></tr>';
+}
+function saveItem(){
+ if(!managerOn)return alert('Manager sign-in required.');
+ const name=$('itemName').value.trim(),price=Number($('itemPrice').value),category=$('itemCategory').value,stock=Number($('itemStock').value);
+ if(!name||!valid(price)||!Number.isInteger(stock)||stock<0)return alert('Enter an item name, a valid price, and a whole-number stock quantity.');
+ if(editingItemId){
+  const item=data.items.find(x=>x.id===editingItemId);if(!item)return;
+  item.name=name;item.price=price;item.category=category;item.stock=stock;item.emoji=itemEmoji(category);
+  log('Item updated','Inventory',name+' • price/stock updated',0);
+ }else{
+  const id='IT-'+String(Date.now()).slice(-8);
+  data.items.push({id,name,price,category,stock,emoji:itemEmoji(category)});
+  log('Item added','Inventory',name+' added at '+money(price),0);
+ }
+ cancelItemEdit();save();alert('Store item saved!');
+}
+function editItem(id){
+ if(!managerOn)return;
+ const item=data.items.find(x=>x.id===id);if(!item)return;
+ editingItemId=id;$('itemName').value=item.name;$('itemPrice').value=item.price;$('itemCategory').value=item.category;$('itemStock').value=item.stock;
+ $('itemFormTitle').textContent='Edit store item';$('saveItemBtn').textContent='Save changes';$('cancelEditBtn').classList.remove('hidden');$('itemName').focus();
+}
+function cancelItemEdit(){
+ editingItemId=null;$('itemName').value='';$('itemPrice').value='';$('itemCategory').value='Toys';$('itemStock').value=10;
+ $('itemFormTitle').textContent='Add an item for sale';$('saveItemBtn').textContent='Add item';$('cancelEditBtn').classList.add('hidden');
+}
+function deleteItem(id){
+ if(!managerOn)return;
+ const item=data.items.find(x=>x.id===id);if(!item)return;
+ if(!confirm('Remove '+item.name+' from the digital store?'))return;
+ data.items=data.items.filter(x=>x.id!==id);log('Item removed','Inventory',item.name,0);save();
+}
+function buyItem(id){
+ const item=data.items.find(x=>x.id===id),customer=data.customers.find(c=>c.id===$('shopCustomer').value);
+ if(!item||!customer)return alert('Create a customer account first.');
+ if(Number(item.stock)<=0)return alert('This item is out of stock.');
+ if(customer.balance<item.price)return alert('This customer does not have enough play credits. The manager can add credits in the Manager tab.');
+ if(!confirm('Sell '+item.name+' to '+customer.name+' for '+money(item.price)+'?'))return;
+ customer.balance-=item.price;item.stock=Number(item.stock)-1;data.manager+=item.price;
+ log('Store purchase',customer.name,item.name,-item.price);
+ log('Sale received','Manager Account',item.name+' sold to '+customer.name,item.price);
+ save();alert('Purchase complete! A pretend receipt was added to Receipts & History.');
+}
+
+function render(){
+ $('managerBalance').textContent=money(data.manager);$('checksBalance').textContent=money(data.checks);$('checksDeskBalance').textContent=money(data.checks);
+ $('customerTotal').textContent=money(data.customers.reduce((a,c)=>a+Number(c.balance),0));$('customerCount').textContent=data.customers.length+' customer account(s)';
+ $('customerGrid').innerHTML=data.customers.map(c=>`<div class="card customer-card" onclick="selectCustomer('${c.id}')"><div class="muted">CUSTOMER WALLET</div><h2>${safe(c.name)}</h2><div class="balance">${money(c.balance)}</div><div class="account-id">${c.id}</div><button class="secondary full">Open wallet</button></div>`).join('')||'<div class="card">No customer accounts yet. Create one to start playing.</div>';
+ const opts=data.customers.map(c=>`<option value="${c.id}">${safe(c.name)} (${c.id})</option>`).join('');
+ ['checkCustomer','managerCustomer'].forEach(id=>$(id).innerHTML=opts);
+ $('historyRows').innerHTML=data.history.map(h=>`<tr><td>${safe(h.date)}</td><td><span class="pill ${h.amount<0?'out':''}">${safe(h.type)}</span></td><td>${safe(h.account)}</td><td>${safe(h.details)}</td><td>${h.amount<0?'-':''}${money(Math.abs(h.amount))}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">No activity yet.</td></tr>';
+ $('managerLocked').classList.toggle('hidden',managerOn);$('managerTools').classList.toggle('hidden',!managerOn);
+ $('inventoryLocked').classList.toggle('hidden',managerOn);$('inventoryTools').classList.toggle('hidden',!managerOn);
+ const shopOpts=data.customers.map(c=>`<option value="${c.id}">${safe(c.name)} — ${money(c.balance)}</option>`).join('');
+ $('shopCustomer').innerHTML=shopOpts;
+ renderShop();renderInventory();
+ if(selectedCustomer&&!data.customers.some(c=>c.id===selectedCustomer)){selectedCustomer=null;$('customerDetail').classList.add('hidden')}
+}
+function selectCustomer(id){selectedCustomer=id;const c=data.customers.find(x=>x.id===id);if(!c)return;const el=$('customerDetail');el.classList.remove('hidden');el.innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><div class="muted">CUSTOMER WALLET</div><h2>${safe(c.name)}</h2><div class="account-id">${c.id}</div></div><div class="balance">${money(c.balance)}</div></div><div class="grid"><div><label>Purchase description</label><input id="purchaseDesc" maxlength="60" placeholder="Toy car, candy, etc."></div><div><label>Purchase amount</label><input id="purchaseAmount" type="number" min="0.01" step="0.01" placeholder="5.00"></div></div><button class="primary full" onclick="purchase('${c.id}')">Charge customer & create receipt</button><button class="secondary full" onclick="showTab('history')">View receipts</button>`;el.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function purchase(id){const c=data.customers.find(x=>x.id===id),amt=Number($('purchaseAmount').value),desc=$('purchaseDesc').value.trim()||'Store purchase';if(!c||!valid(amt))return alert('Enter a valid amount.');c.balance-=amt;data.manager+=amt;log('Purchase',c.name,desc,-amt);log('Sale credit','Manager Account','Sale from '+c.name+': '+desc,amt);save();selectCustomer(id);alert('Pretend receipt created!')}
+function valid(n){return Number.isFinite(n)&&n>0}
+function openCustomerModal(){$('customerModal').classList.add('show')}
+function closeCustomerModal(){$('customerModal').classList.remove('show')}
+function createCustomer(){const name=$('newName').value.trim(),bal=Number($('newBalance').value);if(!name||!Number.isFinite(bal)||bal<0)return alert('Enter a name and valid starting balance.');const id='TC-'+String(1001+Math.floor(Math.random()*8998));data.customers.push({id,name,balance:bal});if(bal){log('Opening balance',name,'Starting customer wallet',bal)}else log('Account created',name,'New customer wallet',0);save();closeCustomerModal();$('newName').value='';showTab('customers')}
+function managerLogin(){if(managerOn)return;const p=prompt('Enter manager PIN (default 1234):');if(p===null)return;if(p===data.pin){managerOn=true;render();showTab('manager')}else alert('Incorrect PIN.')}
+function managerLogout(){managerOn=false;render()}
+function adjustCustomer(){if(!managerOn)return;const c=data.customers.find(x=>x.id===$('managerCustomer').value),amt=Number($('adjustAmount').value),action=$('adjustAction').value,reason=$('adjustReason').value.trim()||'Manager adjustment';if(!c||!valid(amt))return alert('Choose a customer and enter a valid amount.');if(action==='add'){c.balance+=amt;log('Manager credit',c.name,reason,amt)}else{c.balance-=amt;log('Manager debit',c.name,reason,-amt)}$('adjustAmount').value='';$('adjustReason').value='';save();alert('Manager adjustment saved.')}
+function adjustFund(){if(!managerOn)return;const key=$('fundAccount').value,amt=Number($('fundAmount').value),action=$('fundAction').value,reason=$('fundReason').value.trim()||'Manager account adjustment';if(!valid(amt))return alert('Enter a valid amount.');data[key]+=action==='add'?amt:-amt;log(action==='add'?'Manager credit':'Manager debit',key==='manager'?'Manager Account':'Checks Account',reason,action==='add'?amt:-amt);$('fundAmount').value='';$('fundReason').value='';save();alert('Account updated.')}
+function recordCheck(){const amt=Number($('checkAmount').value),num=$('checkNumber').value.trim()||'No number',c=data.customers.find(x=>x.id===$('checkCustomer').value);if(!c||!valid(amt))return alert('Choose a customer and enter a valid amount.');data.checks+=amt;log('Pretend check','Checks Account',num+' from '+c.name,amt);$('checkAmount').value='';$('checkNumber').value='';save();alert('Pretend check recorded in the Checks Account. It has not been added to the customer wallet.')}
+function changePin(){if(!managerOn)return;const p=$('newPin').value.trim();if(!/^\d{4,8}$/.test(p))return alert('PIN must be 4 to 8 digits.');data.pin=p;$('newPin').value='';save();alert('Manager PIN changed on this browser.')}
+function resetGame(){if(!managerOn)return;if(!confirm('Reset all customers, balances, PIN and history to the original game?'))return;data=JSON.parse(JSON.stringify(defaults));managerOn=false;selectedCustomer=null;save();showTab('home')}
+function exportHistory(){const rows=[['Date','Type','Account','Details','Amount'],...data.history.map(h=>[h.date,h.type,h.account,h.details,h.amount])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='tropical-cash-play-history.csv';a.click();URL.revokeObjectURL(a.href)}
+render();
+</script>
+</body></html>
